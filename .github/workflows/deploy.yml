@@ -1,4 +1,4 @@
-name: ALE - API
+name: magicite
 
 on:
   push:
