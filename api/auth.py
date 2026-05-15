@@ -3,7 +3,7 @@ import requests
 from fastapi import HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from functools import lru_cache
-from jwt.algorithms import OKPAlgorithm, RSAAlgorithm
+from jwt.algorithms import ECAlgorithm, OKPAlgorithm, RSAAlgorithm
 
 from api.config import settings
 
@@ -20,17 +20,23 @@ def _get_jwks() -> dict:
     return res.json()
 
 
+_EC_ALG = {"P-256": "ES256", "P-384": "ES384", "P-521": "ES512"}
+
+
 def _public_key_for(kid: str) -> tuple:
     for key in _get_jwks().get("keys", []):
         if key.get("kid") == kid:
             kty = key.get("kty")
             if kty == "RSA":
                 return RSAAlgorithm.from_jwk(key), "RS256"
+            elif kty == "EC":
+                alg = _EC_ALG.get(key.get("crv", "P-256"), "ES256")
+                return ECAlgorithm.from_jwk(key), alg
             elif kty == "OKP":
                 return OKPAlgorithm.from_jwk(key), "EdDSA"
             else:
-                raise ValueError(f"Unsupported key type: {kty}")
-    raise ValueError(f"Key '{kid}' not found in JWKS")
+                raise HTTPException(status_code=401, detail=f"Unsupported key type: {kty}")
+    raise HTTPException(status_code=401, detail=f"Key '{kid}' not found in JWKS")
 
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Security(_bearer)) -> str:
