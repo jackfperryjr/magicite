@@ -1,7 +1,7 @@
-from fastapi import FastAPI
+﻿from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import clips
+from api.routers import clips
 
 app = FastAPI(title="Magicite", version="0.1.0")
 
@@ -19,3 +19,4 @@ app.include_router(clips.router)
 @app.get("/health")
 def health():
     return {"status": "ok"}
+

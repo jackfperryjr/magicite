@@ -1,8 +1,8 @@
-import jwt
+﻿import jwt
 from fastapi import HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from app.config import settings
+from api.config import settings
 
 _bearer = HTTPBearer()
 
@@ -20,3 +20,4 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Security(_beare
         raise HTTPException(status_code=401, detail="Token expired")
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
+
