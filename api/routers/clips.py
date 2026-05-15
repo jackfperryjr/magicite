@@ -21,6 +21,9 @@ class ClipIn(BaseModel):
 
 @router.post("", status_code=201)
 def create_clip(payload: ClipIn, user_id: str = Depends(get_current_user)):
+    if not payload.raw_text.strip():
+        raise HTTPException(status_code=422, detail="Page has no readable text content.")
+
     extracted = process_clip(
         title=payload.title or "",
         raw_text=payload.raw_text,
