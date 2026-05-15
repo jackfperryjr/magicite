@@ -1,23 +1,51 @@
-﻿import jwt
+import jwt
+import requests
 from fastapi import HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from functools import lru_cache
+from jwt.algorithms import RSAAlgorithm
 
 from api.config import settings
 
 _bearer = HTTPBearer()
 
 
+@lru_cache(maxsize=1)
+def _get_jwks() -> dict:
+    res = requests.get(
+        f"{settings.supabase_url}/auth/v1/.well-known/jwks.json",
+        timeout=10,
+    )
+    res.raise_for_status()
+    return res.json()
+
+
+def _public_key_for(kid: str):
+    for key in _get_jwks().get("keys", []):
+        if key.get("kid") == kid:
+            return RSAAlgorithm.from_jwk(key)
+    raise ValueError(f"Key '{kid}' not found in JWKS")
+
+
 def get_current_user(credentials: HTTPAuthorizationCredentials = Security(_bearer)) -> str:
+    token = credentials.credentials
     try:
-        payload = jwt.decode(
-            credentials.credentials,
-            settings.supabase_jwt_secret,
-            algorithms=["HS256"],
-            audience="authenticated",
-        )
+        header = jwt.get_unverified_header(token)
+        kid = header.get("kid")
+
+        if kid:
+            key = _public_key_for(kid)
+            payload = jwt.decode(token, key, algorithms=["RS256"], audience="authenticated")
+        else:
+            payload = jwt.decode(
+                token,
+                settings.supabase_jwt_secret,
+                algorithms=["HS256"],
+                audience="authenticated",
+            )
+
         return payload["sub"]
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
+    except jwt.InvalidTokenError as e:
+        raise HTTPException(status_code=401, detail=f"Invalid token: {e}")
