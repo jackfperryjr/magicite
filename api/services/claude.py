@@ -1,6 +1,6 @@
-import anthropic
+﻿import anthropic
 
-from app.config import settings
+from api.config import settings
 
 _client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
 
@@ -49,3 +49,4 @@ def process_clip(title: str, raw_text: str, url: str) -> dict:
 
     tool_block = next(b for b in message.content if b.type == "tool_use")
     return tool_block.input
+

@@ -1,12 +1,12 @@
-from typing import Optional
+﻿from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
-from app.auth import get_current_user
-from app.db import get_supabase
-from app.services.claude import process_clip
-from app.services.voyage import embed
+from api.auth import get_current_user
+from api.db import get_supabase
+from api.services.claude import process_clip
+from api.services.voyage import embed
 
 router = APIRouter(prefix="/clips", tags=["clips"])
 
@@ -45,3 +45,4 @@ def create_clip(payload: ClipIn, user_id: str = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail="Failed to save clip")
 
     return result.data[0]
+
