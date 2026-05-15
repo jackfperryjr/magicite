@@ -4,4 +4,5 @@ pydantic-settings>=2.4
 anthropic>=0.40
 voyageai>=0.3
 supabase>=2.7
-PyJWT>=2.8
+PyJWT[crypto]>=2.8
+requests>=2.32
