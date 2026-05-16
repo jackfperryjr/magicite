@@ -2,7 +2,7 @@
 
 > The processing core of the Magiloom ecosystem. Raw web clips enter; structured, embedded knowledge exits.
 
-Part of the **[Magiloom](https://github.com/jackfperryjr)** second-brain ecosystem alongside [Aetherneedle](#) and [Crystarium](#).
+Part of the **Magiloom** second-brain ecosystem alongside [Aetherneedle](https://github.com/jackfperryjr/aetherneedle) and [Crystarium](https://github.com/jackfperryjr/crystarium).
 
 ---
 
