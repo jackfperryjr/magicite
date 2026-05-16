@@ -4,6 +4,15 @@
 
 Part of the **[Magiloom](https://github.com/jackfperryjr)** second-brain ecosystem alongside [Aetherneedle](#) and [Crystarium](#).
 
+<p align="center">
+  <img src="https://github.com/jackfperryjr/magicite/actions/workflows/deploy.yml/badge.svg" alt="Build Status" height="20">
+  <img src="https://img.shields.io/badge/python-3670A0?style=flat-square&logo=python&logoColor=ffdd54" />
+  <img src="https://img.shields.io/badge/FastAPI-005571?style=flat-square&logo=fastapi" />
+  <img src="https://img.shields.io/badge/Supabase-3FC085?style=flat-square&logo=supabase&logoColor=white" alt="Supabase">
+  <img src="https://img.shields.io/badge/Claude_4.6-D97706?style=flat-square&logo=anthropic&logoColor=white" alt="Claude 4.6">
+  <img src="https://img.shields.io/badge/Voyage_AI-008080?style=flat-square&logo=vlc&logoColor=white" alt="Voyage AI">
+</p>
+
 ---
 
 ## What it does
